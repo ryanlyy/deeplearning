@@ -2,8 +2,8 @@
 import sys, os
 import numpy as np
 import pickle
-sys.path.append(os.pardir) 
 from mnist import load_mnist
+sys.path.append(os.pardir)
 from utils.activition import sigmoid, softmax
 
 
@@ -19,29 +19,42 @@ def init_network():
 
 
 def predict(network, x):
-    w1, w2, w3 = network['W1'], network['W2'], network['W3']
+    W1, W2, W3 = network['W1'], network['W2'], network['W3']
     b1, b2, b3 = network['b1'], network['b2'], network['b3']
 
-    a1 = np.dot(x, w1) + b1
+    print(W1.shape)
+    print(W2.shape)
+    print(W3.shape)
+    print(b1.shape)
+    print(b2.shape)
+    print(b3.shape)
+    a1 = np.dot(x, W1) + b1
+    print(a1)
     z1 = sigmoid(a1)
-    a2 = np.dot(z1, w2) + b2
+    print(z1)
+    a2 = np.dot(z1, W2) + b2
+    print(a2)
     z2 = sigmoid(a2)
-    a3 = np.dot(z2, w3) + b3
+    print(z2)
+    a3 = np.dot(z2, W3) + b3
+    print(a3)
     y = softmax(a3)
+    print(y)
 
     return y
 
 
 x, t = get_data()
+print(x.shape)
+print(x.shape[0])
 network = init_network()
+#predict(network, x[0])
 
-batch_size = 100 # 批数量
-accuracy_cnt = 0
+training_size = x.shape[0]
+batch_size = 10
 
-for i in range(0, len(x), batch_size):
-    x_batch = x[i:i+batch_size]
-    y_batch = predict(network, x_batch)
-    p = np.argmax(y_batch, axis=1)
-    accuracy_cnt += np.sum(p == t[i:i+batch_size])
-
-print("Accuracy:" + str(float(accuracy_cnt) / len(x)))
+batch_mask = np.random.choice(training_size, batch_size)
+x_batch = x[batch_mask]
+print(x_batch.shape)
+t_batch = t[batch_mask]
+print(t_batch.shape)
